@@ -6,7 +6,7 @@ include (TestBigEndian)
 option(BUILD_SHARED_LIBS "Build with shared (.DLL .SO) libraries." ON)
 
 # libSquish not currently supported by CMake
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 file(GLOB DevIL_SRCS src/*.cpp)
 file(GLOB DevIL_INC include/*.h ../include/config.h ../include/IL/devil_internal_exports.h ../include/IL/il.h)
@@ -93,18 +93,18 @@ if(NOT IL_JASPER_LIB)
   find_package(Jasper)
 endif(NOT IL_JASPER_LIB)
 
+# NVidia texture tools
+option(IL_NVTT_LIB "Custom location for NVTT" OFF)
+if(NOT IL_NVTT_LIB)
+  find_package(NVTT)
+endif(NOT IL_NVTT_LIB)
+
 #Squish
 option(IL_SQUISH_LIB "Custom location for libSquish" OFF)
 if(NOT IL_SQUISH_LIB)
 #find_package(Squish)
   find_package(libSquish)
 endif(NOT IL_SQUISH_LIB)
-
-# NVidia texture tools
-option(IL_NVTT_LIB "Custom location for NVTT" OFF)
-if(NOT IL_NVTT_LIB)
-  find_package(NVTT)
-endif(NOT IL_NVTT_LIB)
 
 #OpenEXR
 option(IL_OPENEXR_LIB "Custom location for OpenEXR" OFF)
@@ -270,13 +270,9 @@ endif(NOT IL_NO_EXR)
 
 if(IL_USE_DXTC_NVIDIA)
   list(APPEND incs ${NVTT_INCLUDE_DIR} )
-  list(APPEND libs ${NVTT_LIBRARY} )
+  list(APPEND libs ${NVTT_LIBRARIES} )
 endif(IL_USE_DXTC_NVIDIA)
 
-if(IL_USE_DXTC_NVIDIA)
-  list(APPEND incs ${NVTT_INCLUDE_DIR} )
-  list(APPEND libs ${NVTT_LIBRARY} )
-endif(IL_USE_DXTC_NVIDIA)
 
 if(IL_USE_DXTC_SQUISH)
     list(APPEND incs ${LIBSQUISH_INCLUDE_DIR} )
@@ -292,7 +288,7 @@ endif(IL_USE_DXTC_SQUISH)
 
 
 include_directories(${incs})
-target_link_libraries(IL ${libs})
+target_link_libraries(IL PUBLIC ${libs})
 
 # generate config.h
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/include/config.h)
