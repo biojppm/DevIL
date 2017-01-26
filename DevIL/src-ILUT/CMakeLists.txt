@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.6)
 
 project(ILUT)
 
+option(BUILD_SHARED_LIBS "Build with shared (.DLL .SO) libraries." ON)
+
 file(GLOB ILUT_SRCS src/*.cpp)
 file(GLOB ILUT_INC include/*.h ../include/IL/devil_internal_exports.h ../include/IL/ilut.h)
 file(GLOB ILUT_RSRC)
@@ -42,9 +44,12 @@ source_group("Source Files" FILES src/*.cpp)
 source_group("Header Files" FILES ${ILUT_INC} )
 source_group("Resource Files" FILES ${ILUT_RSRC} )
 
-# Remove SHARED to create a static library
-add_library(ILUT SHARED ${ILUT_SRCS} ${ILUT_INC} ${ILUT_RSRC})
-set_target_properties(ILUT PROPERTIES SOVERSION 1)
+if(BUILD_SHARED_LIBS)
+    add_library(ILUT SHARED ${ILUT_SRCS} ${ILUT_INC} ${ILUT_RSRC})
+    set_target_properties(ILUT PROPERTIES SOVERSION 1)
+else()
+    add_library(ILUT ${ILUT_SRCS} ${ILUT_INC} ${ILUT_RSRC})
+endif()
 
 ## add link sub library info
 target_link_libraries(ILUT

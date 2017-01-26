@@ -6,6 +6,8 @@ file(GLOB ILU_SRCS src/*.cpp)
 file(GLOB ILU_INC include/*.h ../include/IL/devil_internal_exports.h ../include/IL/ilu.h)
 file(GLOB ILU_RSRC)
 
+option(BUILD_SHARED_LIBS "Build with shared (.DLL .SO) libraries." ON)
+
 # From http://stackoverflow.com/questions/17317350/compiling-32-and-64-bit
 MESSAGE(" ")
 if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
@@ -42,9 +44,12 @@ source_group("Source Files" FILES src/*.cpp)
 source_group("Header Files" FILES ${ILU_INC} )
 source_group("Resource Files" FILES ${ILU_RSRC} )
 
-# Remove SHARED to create a static library
-add_library(ILU SHARED ${ILU_SRCS} ${ILU_INC} ${ILU_RSRC})
-set_target_properties(ILU PROPERTIES SOVERSION 1)
+if(BUILD_SHARED_LIBS)
+    add_library(ILU SHARED ${ILU_SRCS} ${ILU_INC} ${ILU_RSRC})
+    set_target_properties(ILU PROPERTIES SOVERSION 1)
+else()
+    add_library(ILU ${ILU_SRCS} ${ILU_INC} ${ILU_RSRC})
+endif()
 
 
 ## ILU requires IL
