@@ -73,6 +73,10 @@ struct ilOutputHandlerMem : public nvtt::OutputHandler
 		Temp += size;
 		return true;
 	}
+    virtual void endImage()
+    {
+        // ignore.
+    }
 
 	ILubyte	*NewData, *Temp;
 	ILuint	Size;
@@ -161,6 +165,10 @@ struct ilOutputHandlerFile : public nvtt::OutputHandler
 		if (iwrite(data, 1, size) == size)
 			return true;
 		return false;
+	}
+	virtual void endImage()
+	{
+		// ignore.
 	}
 
 };
