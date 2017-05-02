@@ -23,7 +23,19 @@ endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 include_directories( include ../include )
 
 # Find glut
-find_package(GLUT REQUIRED)
+if(WIN32)
+  find_path( GLUT_INCLUDE_DIR NAMES GL/glut.h
+    PATHS  ${GLUT_ROOT_PATH}/include )
+  find_library( GLUT_glut_LIBRARY
+      NAMES glut glut32 freeglut
+      glutd glut32d freeglutd
+    PATHS
+    ${OPENGL_LIBRARY_DIR}
+    ${GLUT_ROOT_PATH}/Release
+    )
+else()
+    find_package(GLUT REQUIRED)
+endif()
 include_directories(${GLUT_INCLUDE_DIRS})
 link_directories(${GLUT_LIBRARY_DIRS})
 add_definitions(${GLUT_DEFINITIONS})
