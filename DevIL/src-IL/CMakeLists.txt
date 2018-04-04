@@ -288,7 +288,8 @@ if(IL_USE_DXTC_SQUISH)
 endif(IL_USE_DXTC_SQUISH)
 
 
-include_directories(${incs})
+message(STATUS "libs=${libs}")
+target_include_directories(IL PUBLIC ${incs})
 target_link_libraries(IL PUBLIC ${libs})
 
 # generate config.h
